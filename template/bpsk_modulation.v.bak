@@ -1,0 +1,11 @@
+module BPSK_Modulation(
+	input logic clk,
+	input logic reset,
+	input logic [11:0] dds_out,
+	input logic lfsr_bit,
+	output logic [11:0] bpsk_out
+);
+
+	
+
+endmodule

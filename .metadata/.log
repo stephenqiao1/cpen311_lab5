@@ -1,0 +1,30 @@
+!SESSION 2024-06-23 17:17:12.875 -----------------------------------------------
+eclipse.buildId=4.3.2.M20140221-1700
+java.version=1.8.0_05
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.cpp.product -pluginCustomization C:/intelfpga_lite/16.1/nios2eds/bin/eclipse_nios2/plugin_customization.ini
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.cpp.product -pluginCustomization C:/intelfpga_lite/16.1/nios2eds/bin/eclipse_nios2/plugin_customization.ini
+
+!ENTRY org.eclipse.egit.ui 2 0 2024-06-23 17:18:23.289
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\steph'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-06-23 17:20:14.412
+!MESSAGE Indexed 'lab5' (22 sources, 10 headers) in 3.67 sec: 1,418 declarations; 3,963 references; 39 unresolved inclusions; 2 syntax errors; 97 unresolved names (1.77%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-06-23 17:21:10.848
+!MESSAGE Indexed 'lab5_bsp' (94 sources, 120 headers) in 2.84 sec: 4,783 declarations; 13,803 references; 7 unresolved inclusions; 6 syntax errors; 23 unresolved names (0.12%)
+
+!ENTRY com.altera.sbtgui.core 4 0 2024-06-23 17:22:21.576
+!MESSAGE Error executing 'nios2-bsp-generate-files --bsp-dir . --settings settings.bsp', unexpected return code 1.
+
+Error message:
+
+SEVERE: Paths cannot contain spaces: "--bsp-dir C:\Users\steph\OneDrive\Desktop\UBC\4th Year\CPEN311\cpen311_lab5\template\software\lab5_bsp"
+SEVERE: Paths cannot contain spaces: "--bsp-dir C:\Users\steph\OneDrive\Desktop\UBC\4th Year\CPEN311\cpen311_lab5\template\software\lab5_bsp"
+SEVERE: nios2-bsp-generate-files failed.
+

@@ -1,0 +1,16 @@
+module ASK_Modulation (
+	input logic clk,
+	input logic reset,
+	input logic [11:0] dds_out, // 12-bit DDS output
+	input logic lfsr_bit,
+	output logic [11:0] ask_out
+);
+
+	always_ff @(posedge clk, posedge reset) begin
+		if (reset) begin
+			
+		end else begin
+		end
+	end
+
+endmodule

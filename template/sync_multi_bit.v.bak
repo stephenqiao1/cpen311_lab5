@@ -1,0 +1,22 @@
+module SyncMultiBit (
+    input logic clk_dst,      // Destination clock
+    input logic rst,          // Reset signal
+    input logic [11:0] async_in, // Asynchronous input signal
+    output logic [11:0] sync_out  // Synchronized output signal
+);
+
+    logic [11:0] sync_ff1, sync_ff2;
+
+    always_ff @(posedge clk_dst or posedge rst) begin
+        if (rst) begin
+            sync_ff1 <= 12'b0;
+            sync_ff2 <= 12'b0;
+            sync_out <= 12'b0;
+        end else begin
+            sync_ff1 <= async_in;
+            sync_ff2 <= sync_ff1;
+            sync_out <= sync_ff2;
+        end
+    end
+
+endmodule
