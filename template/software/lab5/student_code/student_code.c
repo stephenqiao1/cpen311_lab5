@@ -10,6 +10,12 @@
 #include "sys/alt_irq.h"
 #include "student_code.h"
 #include "altera_avalon_pio_regs.h"
+#include <stdio.h>
+
+#define LFSR_VAL_BASE 0x80010d0
+#define LFSR_CLK_INTERRUPT_GEN_BASE 0x80010e0
+#define DDS_INCREMENT_BASE 0x80010c0
+
 
 #ifdef ALT_ENHANCED_INTERRUPT_API_PRESENT
 void handle_lfsr_interrupts(void* context)
@@ -22,19 +28,25 @@ void handle_lfsr_interrupts(void* context, alt_u32 id)
 	#ifdef DDS_INCREMENT_BASE
 
 	// Read the LFSR value
-    alt_u32 lfsr_value = IORD_ALTERA_AVALON_PIO_DATA(LFSR_VAL_BASE);
+    int lfsr_value = IORD_ALTERA_AVALON_PIO_DATA(LFSR_VAL_BASE);
+	// printf("LFSR Value: %u\n", lfsr_value);
 
     // Check bit 0 of the LFSR value
     if (lfsr_value & 0x1) {
         // If LFSR bit 0 is 1, set DDS to 5 Hz
-        IOWR_ALTERA_AVALON_PIO_DATA(DDS_INCREMENT_BASE, 429);
+        IOWR_ALTERA_AVALON_PIO_DATA(DDS_INCREMENT_BASE, 0x1AD);
+		// printf("DDS Increment set to 5 Hz (429)\n");
     } else {
         // If LFSR bit 0 is 0, set DDS to 1 Hz
-        IOWR_ALTERA_AVALON_PIO_DATA(DDS_INCREMENT_BASE, 86);
+        IOWR_ALTERA_AVALON_PIO_DATA(DDS_INCREMENT_BASE, 0x56);
+		// printf("DDS Increment set to 1 Hz (86)\n");
     }
 
     // Reset the edge capture register
-    IOWR_ALTERA_AVALON_PIO_EDGE_CAP(LFSR_CLK_INTERRUPT_GEN_BASE, 0);
+    IOWR_ALTERA_AVALON_PIO_EDGE_CAP(LFSR_CLK_INTERRUPT_GEN_BASE, 0x0);
+
+	// Read the PIO to delay ISR exit
+	IORD_ALTERA_AVALON_PIO_EDGE_CAP(LFSR_CLK_INTERRUPT_GEN_BASE);
 	
 	#endif
 	#endif
@@ -59,6 +71,8 @@ void init_lfsr_interrupt()
 #else
 	alt_irq_register( LFSR_CLK_INTERRUPT_GEN_IRQ, NULL,	handle_button_interrupts);
 #endif
+
+	// printf("Hello\n");
 	
 	#endif
 	#endif

@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>ucosii</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>23-Jun-2024 9:56:21 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1719204981610</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>25-Jun-2024 12:14:46 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1719342887013</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Users\steph\OneDrive\Desktop\UBC\4thYear\CPEN311\cpen311_lab5\template\software\lab5_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\DE1_SoC_QSYS.sopcinfo</SopcDesignFile>
@@ -1757,31 +1757,31 @@
                 <attributes>timer</attributes>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>dds_increment</slaveDescriptor>
+                <slaveDescriptor>audio_WRREQ</slaveDescriptor>
                 <addressRange>0x080010A0 - 0x080010AF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>lfsr_val</slaveDescriptor>
+                <slaveDescriptor>audio_WRCLK</slaveDescriptor>
                 <addressRange>0x080010B0 - 0x080010BF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>lfsr_clk_interrupt_gen</slaveDescriptor>
+                <slaveDescriptor>dds_increment</slaveDescriptor>
                 <addressRange>0x080010C0 - 0x080010CF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>audio_WRREQ</slaveDescriptor>
+                <slaveDescriptor>lfsr_val</slaveDescriptor>
                 <addressRange>0x080010D0 - 0x080010DF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>audio_WRCLK</slaveDescriptor>
+                <slaveDescriptor>lfsr_clk_interrupt_gen</slaveDescriptor>
                 <addressRange>0x080010E0 - 0x080010EF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>

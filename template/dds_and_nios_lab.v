@@ -1,6 +1,6 @@
 `default_nettype none
 `include "scan_events.h"
-//`define ENABLE_AUDIO_DEMO
+// `define ENABLE_AUDIO_DEMO
 module dds_and_nios_lab(
 
       ///////// ADC /////////
@@ -270,13 +270,12 @@ assign VGA_BLANK_N=vga_de;
 assign VGA_CLK=video_clk_40Mhz;
 assign VGA_SYNC_N=1'b1 & SW[1];
 
-logic lfsr_clk;
 logic [4:0]LFSR;
 logic [31:0] dds_increment;
 
 /// NIOS II Qsys
 
-DE1_SoC_QSYS U0( 
+DE1_SoC_QSYS u0( 
 		.clk_clk(CLOCK_50),                        //                     clk.clk
 		.reset_reset_n(1'b1),                  //                   reset.reset_n
 		.key_external_connection_export(KEY), // key_external_connection.export
@@ -322,9 +321,9 @@ DE1_SoC_QSYS U0(
        .clk_25_out_clk                                (CLK_25MHZ),                                 //                      clk_25_out.clk
        
 		 // New PIOs for LFSR and DDS
-    .lfsr_clk_interrupt_gen_external_connection_export(lfsr_clk), // LFSR clock
-    .lfsr_val_external_connection_export (lfsr), // LFSR value
-    .dds_increment_external_connection_export(dds_increment) // DDS increment
+    .lfsr_clk_interrupt_gen_export(one_hz_clk), // LFSR clock
+    .lfsr_val_export (extended_lfsr_32), // LFSR value
+    .dds_increment_export(dds_increment) // DDS increment
 	);
 	
  
@@ -339,39 +338,48 @@ DE1_SoC_QSYS U0(
 (* keep = 1, preserve = 1 *) logic [11:0] actual_selected_signal;
 
 wire one_hz_clk;
-wire [4:0] lfsr;
 wire sync_lfsr_bit;
-wire [11:0] ask_out, bpsk_out, sin_out, cos_out, squ_out, saw_out, modulated_signal, selected_signal;
+wire [11:0] ask_out, bpsk_out, sin_out, cos_out, squ_out, saw_out, modulated_signal, selected_signal, extended_lfsr0;
 wire [11:0] sync_modulated_signal, sync_selected_signal;
+
+wire [31:0] extended_lfsr_32;
+
+// Extend lfsr[0] to 12 bits signed 2's complement
+assign extended_lfsr0 = sync_lfsr_bit ? 12'hFFF : 12'h000;
+
+assign extended_lfsr_32 = {27'b0, LFSR};
+
+// Debug: Assigning lower 10 bits of dds_increment to LEDs
+assign LEDR[9:0] = dds_increment[9:0];
 
 Clock_Div clock_1hz(
 	.inclk(CLOCK_50),
 	.div_clk_count(50000000/2),
-	.rst(~KEY[3]),
+	.rst(1'b0),
 	.outclk(one_hz_clk),
 	.counter()
 );
 
+// LFSR Generation
 LFSR lfsr_inst(
 	.clk(one_hz_clk),
 	.clr(~KEY[3]),
-	.lfsr(lfsr)
+	.lfsr(LFSR)
 );
 
 // Synchronize LFSR bit to 50 Mhz clock domain
 Sync_Clk_Sig sync_lfsr (
 	.clk(CLOCK_50),
-	.rst(~KEY[3]),
-	.sig(lfsr[0]),
-	.sync_out(sync_lfsr_bit)
+	.async_in(LFSR[0]),
+	.sync_sig(sync_lfsr_bit)
 );
 
 // Instantiate the waveform_gen
 waveform_gen dds(
    .clk(CLOCK_50),
-   .reset(~KEY[3]),
+   .reset(1'b1),
    .en(1'b1),
-   .phase_inc(32'd258),
+   .phase_inc(dds_increment),
    .sin_out(sin_out),
    .cos_out(cos_out),
    .squ_out(squ_out),
@@ -381,7 +389,7 @@ waveform_gen dds(
 // ASK Modulation
 ASK_Modulation ask(
 	.clk(CLOCK_50),
-	.reset(~KEY[3]),
+	.reset(1'b0),
 	.dds_out(sin_out),
 	.lfsr_bit(sync_lfsr_bit),
 	.ask_out(ask_out)
@@ -390,8 +398,8 @@ ASK_Modulation ask(
 // BPSK Modulation
 BPSK_Modulation bpsk(
 	.clk(CLOCK_50),
-	.reset(~KEY[3]),
-	.dds_out(sin_out),
+	.reset(1'b0),
+	.dds_out(selected_signal),
 	.lfsr_bit(sync_lfsr_bit),
 	.bpsk_out(bpsk_out)
 );
@@ -399,10 +407,11 @@ BPSK_Modulation bpsk(
 // Signal selection for modulation
 always_comb begin
     case (modulation_selector[1:0])
-        2'b00: modulated_signal = sin_out;
-        2'b01: modulated_signal = ask_out;
+        2'b00: modulated_signal = ask_out;
+		  2'b01: modulated_signal = selected_signal;
         2'b10: modulated_signal = bpsk_out;
-        default: modulated_signal = sin_out;
+        2'b11: modulated_signal = extended_lfsr0;
+        default: modulated_signal = ask_out;
     endcase
 end
 
@@ -411,22 +420,22 @@ always_comb begin
     case (signal_selector[1:0])
         2'b00: selected_signal = sin_out;
         2'b01: selected_signal = cos_out;
-        2'b10: selected_signal = squ_out;
-        2'b11: selected_signal = saw_out;
+        2'b10: selected_signal = saw_out;
+        2'b11: selected_signal = squ_out;
         default: selected_signal = sin_out;
     endcase
 end
 
 Sync_Multi_Bit sync_mod_sig (
 	.clk(sampler),
-	.rst(~KEY[3]),
+	.rst(1'b0),
 	.sig(modulated_signal),
 	.sync_out(sync_modulated_signal)
 );
 
 Sync_Multi_Bit sync_sel_sig (
 	.clk(sampler),
-	.rst(~KEY[3]),
+	.rst(1'b0),
 	.sig(selected_signal),
 	.sync_out(sync_selected_signal)
 );

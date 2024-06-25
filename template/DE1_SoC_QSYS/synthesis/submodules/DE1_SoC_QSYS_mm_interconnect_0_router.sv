@@ -243,32 +243,32 @@ module DE1_SoC_QSYS_mm_interconnect_0_router
 
     // ( 0x80010a0 .. 0x80010b0 )
     if ( {address[RG:PAD4],{PAD4{1'b0}}} == 28'h80010a0   ) begin
-            src_channel = 25'b0001000000000000000000000;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 11;
-    end
-
-    // ( 0x80010b0 .. 0x80010c0 )
-    if ( {address[RG:PAD5],{PAD5{1'b0}}} == 28'h80010b0  && read_transaction  ) begin
-            src_channel = 25'b0000100000000000000000000;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 17;
-    end
-
-    // ( 0x80010c0 .. 0x80010d0 )
-    if ( {address[RG:PAD6],{PAD6{1'b0}}} == 28'h80010c0   ) begin
-            src_channel = 25'b0000010000000000000000000;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 16;
-    end
-
-    // ( 0x80010d0 .. 0x80010e0 )
-    if ( {address[RG:PAD7],{PAD7{1'b0}}} == 28'h80010d0   ) begin
             src_channel = 25'b1000000000000000000000000;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 9;
     end
 
-    // ( 0x80010e0 .. 0x80010f0 )
-    if ( {address[RG:PAD8],{PAD8{1'b0}}} == 28'h80010e0   ) begin
+    // ( 0x80010b0 .. 0x80010c0 )
+    if ( {address[RG:PAD5],{PAD5{1'b0}}} == 28'h80010b0   ) begin
             src_channel = 25'b0100000000000000000000000;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 8;
+    end
+
+    // ( 0x80010c0 .. 0x80010d0 )
+    if ( {address[RG:PAD6],{PAD6{1'b0}}} == 28'h80010c0   ) begin
+            src_channel = 25'b0001000000000000000000000;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 11;
+    end
+
+    // ( 0x80010d0 .. 0x80010e0 )
+    if ( {address[RG:PAD7],{PAD7{1'b0}}} == 28'h80010d0  && read_transaction  ) begin
+            src_channel = 25'b0000100000000000000000000;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 17;
+    end
+
+    // ( 0x80010e0 .. 0x80010f0 )
+    if ( {address[RG:PAD8],{PAD8{1'b0}}} == 28'h80010e0   ) begin
+            src_channel = 25'b0000010000000000000000000;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 16;
     end
 
     // ( 0x80010f0 .. 0x8001100 )
